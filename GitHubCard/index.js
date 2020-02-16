@@ -24,7 +24,6 @@
           user, and adding that card to the DOM.
 */
 
-const followersArray = [];
 
 /* Step 3: Create a function that accepts a single object as its only argument,
           Using DOM methods and properties, create a component that will return the following DOM element:
@@ -35,7 +34,7 @@ const followersArray = [];
     <h3 class="name">{users name}</h3>
     <p class="username">{users user name}</p>
     <p>Location: {users location}</p>
-    <p>Profile:  
+    <p>Profile:
       <a href={address to users github page}>{address to users github page}</a>
     </p>
     <p>Followers: {users followers count}</p>
@@ -46,7 +45,72 @@ const followersArray = [];
 
 */
 
-/* List of LS Instructors Github username's: 
+function createCard(object) {
+  const card = document.createElement('div'),
+    pic = document.createElement('img'),
+    info = document.createElement('div'),
+    name = document.createElement('h3'),
+    username = document.createElement('p'),
+    location = document.createElement('p'),
+    profile = document.createElement('p'),
+    profileurl = document.createElement('a'),
+    followers = document.createElement('p'),
+    following = document.createElement('p'),
+    bio = document.createElement('p');
+
+  card.classList.add('card')
+  info.classList.add('card-info')
+  name.classList.add('name')
+  username.classList.add('username')
+
+  card.append(pic)
+  card.append(info)
+  info.append(name)
+  info.append(username)
+  info.append(location)
+  info.append(profile)
+  info.append(profileurl)
+  info.append(followers)
+  info.append(following)
+  info.append(bio)
+
+  pic.src = object.avatar_url
+  name.textContent = object.name
+  username.textContent = object.login
+  location.textContent = `Location: ${object.location}`
+  profileurl.src = object.html_url
+  profile.textContent = `Profile: ${this.profileurl}`
+  followers.textContent = `Followers: ${object.followers}`
+  following.textContent = `Following: ${object.following}`
+  bio.textContent = `Bio: ${object.bio}`
+
+  return card
+}
+
+const parent = document.querySelector('.cards')
+
+axios.get('https://api.github.com/users/rivercrow25')
+  .then(response => {
+    console.log(response)
+    parent.append(createCard(response.data))
+  })
+  .catch(error => {
+    console.log(error)
+  })
+const followersArray = []
+axios.get('https://api.github.com/users/rivercrow25/following')
+  .then(response => {
+    console.log(response)
+    response.data.forEach(item => {
+      parent.append(createCard(item))
+    })
+
+    return followersArray
+  })
+console.log(followersArray)
+
+
+/* List of LS Instructors Github username's:
   tetondan
   dustinmyers
   justsml
